@@ -1,0 +1,93 @@
+@startuml
+
+title Mastermind
+
+package "app.utils" #DDDDDD {
+  class Console
+  class YesNoDialog
+  class Message
+}
+
+YesNoDialog ..> Console
+
+package "app"{
+  class Mastermind
+}
+
+package "app.domain"{
+  class Board
+  class Combination
+  class SecretCombination
+  class CombinationComparationResult
+  class Attempt
+  enum Color {
+    RED
+    BLUE
+    YELLOW
+    GREEN
+    ORANGE
+    PURPLE
+    NULL
+  }
+}
+
+package "app.views"{
+  class ConsoleView
+  class AttemptView
+  class CombinationView
+  class SecretCombinationView
+  class ProposeCombinationView
+  class BoardView
+  class CombinationComparationResultView
+  class ResumeView
+}
+
+Mastermind *-->"1" Board
+Mastermind *-->"1" BoardView
+
+Board *-->"1" SecretCombination
+Board o--> "10" Attempt
+Board ..> Combination
+
+
+
+Attempt -->"2" Combination
+Attempt *-->"1" CombinationComparationResult
+Combination *--> "4" Color
+
+SecretCombination -up-|> Combination
+SecretCombination ..> Color
+
+CombinationComparationResult o--> Color
+
+ConsoleView -->"1" Console
+AttemptView -up-|> ConsoleView
+CombinationView -up-|> ConsoleView
+BoardView -up-|> ConsoleView
+CombinationComparationResultView -up-|> ConsoleView
+ProposeCombinationView -up-|> ConsoleView
+SecretCombinationView -up-|> CombinationView
+
+AttemptView *-->"1" CombinationView
+AttemptView *-->"1" CombinationComparationResultView
+AttemptView ..> Message
+
+CombinationView -->"1" Combination
+
+ProposeCombinationView ..> Combination
+ProposeCombinationView ..> Message
+
+ResumeView --> YesNoDialog
+ResumeView ..> Message
+
+CombinationComparationResultView -->"1" CombinationComparationResult
+CombinationComparationResultView ..> Message
+
+BoardView *-->"1" SecretCombinationView
+BoardView *-->"1" ProposeCombinationView
+BoardView *-->"1" ResumeView
+BoardView -->"1" Board
+BoardView ..> AttemptView
+BoardView ..> Message
+
+@enduml
